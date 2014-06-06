@@ -31,3 +31,10 @@ add_library(DummyTest dummy.cpp)
 add_executable(RunAllTests run_all_test.cpp)
 target_link_libraries(RunAllTests DummyTest)
 
+add_custom_command(
+  TARGET RunAllTests
+  POST_BUILD
+  COMMAND RunAllTests
+  COMMENT "Running all tests"
+#   VERBATIM
+)

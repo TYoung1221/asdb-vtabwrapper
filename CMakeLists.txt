@@ -8,8 +8,16 @@ set (ASDB_VERSION_PATCH 0)
 
 enable_language(C)
 
+# Options
+option(EXECTEST "Execute all tests" OFF)
+
+# Settings for sub directories
+# sources
 add_subdirectory(src)
+# test
+if(EXECTEST)
 add_subdirectory(test)
+endif()
 
 # Installer Package
 include (InstallRequiredSystemLibraries)

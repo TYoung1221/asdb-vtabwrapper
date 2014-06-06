@@ -10,12 +10,10 @@ TEST_GROUP(ASDBTestGroup)
 {
     void setup()
     {
-        printf("setup\n");
     }
 
     void teardown()
     {
-        printf("teardown\n");
     }
 };
 
