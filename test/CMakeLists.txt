@@ -25,7 +25,7 @@ include (FindPkgConfig)
 # Settings for this project
 set(CMAKE_C_FLAGS "-std=c99")
 # SQLite3
-pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.8)
+pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.7.9)
 link_directories(${SQLITE3_LIBRARY_DIRS})
 link_libraries(${SQLITE3_LIBRARIES})
 # GLib2.0

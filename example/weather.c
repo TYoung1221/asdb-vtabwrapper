@@ -214,7 +214,7 @@ asdb_rc asdb_destroy_vtab( asdb_vtab *pVtab ) {
     return ASDB_OK;
 }
 
-const char const *asdb_get_module_name( void )
+const char * const asdb_get_module_name( void )
 {
     return asdb_module_name;
 }

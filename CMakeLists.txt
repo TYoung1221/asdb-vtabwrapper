@@ -33,7 +33,7 @@ set (CPACK_PACKAGE_NAME "libasdb-dev")
 # deb
 set (CPACK_DEBIAN_PACKAGE_NAME "libasdb-dev")
 set (CPACK_DEBIAN_PACKAGE_MAINTAINER "Makoto Shimazu <makoto.shimaz@gmail.com>")
-set (CPACK_DEBIAN_PACKAGE_DEPENDS "libsqlite3-dev (>=3.8.2), libglib2.0-dev (>=2.40)")
+set (CPACK_DEBIAN_PACKAGE_DEPENDS "libsqlite3-dev (>=3.7.9), libglib2.0-dev (>=2.32)")
 # rpm
 # set (CPACK_RPM_PACKAGE_NAME "libasdb-devel")
 # set (CPACK_RPM_PACKAGE_LICENSE "MIT License")
