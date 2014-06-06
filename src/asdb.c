@@ -23,6 +23,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <glib-2.0/glib.h>
+
+#include "ASDBConfig.h"
+
 #include "array.h"
 
 #include "asdb.h"
@@ -726,7 +729,7 @@ STATIC asdb_rc idx_calc_target( array_t *irows,
 
 /*** vtab ***/
 STATIC sqlite3_asdb_vtab * 
-mk_sqlite3_asdb_vtab( int argc, const char *const*argv ) {
+mk_sqlite3_asdb_vtab( int argc, const char*const* argv ) {
     /* create vtab */
     sqlite3_asdb_vtab * vtab =
         sqlite3_malloc(sizeof(sqlite3_asdb_vtab));
@@ -962,7 +965,7 @@ static void print_pmstate( sqlite3_asdb_vtab *v )
 static int asdbCreateOrConnect(
     sqlite3 *db,                        /* Database connection */
     void *pAux,                         /* One of the RTREE_COORD_* constants */
-    int argc, const char *const*argv,   /* Parameters to CREATE TABLE statement */
+    int argc, const char *const* argv,   /* Parameters to CREATE TABLE statement */
     sqlite3_vtab **ppVtab,              /* OUT: New virtual table */
     char **pzErr,                       /* OUT: Error message, if any */
     int isCreate                        /* True for xCreate, false for xConnect */
@@ -1028,7 +1031,7 @@ static int asdbCreateOrConnect(
 static int asdbCreate(
     sqlite3 *db,
     void *pAux,
-    int argc, const char *const*argv,
+    int argc, const char *const* argv,
     sqlite3_vtab **ppVtab,
     char **pzErr
     )
@@ -1042,7 +1045,7 @@ static int asdbCreate(
 static int asdbConnect(
     sqlite3 *db,
     void *pAux,
-    int argc, const char *const*argv,
+    int argc, const char *const* argv,
     sqlite3_vtab **ppVtab,
     char **pzErr
     )

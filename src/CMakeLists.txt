@@ -7,6 +7,7 @@ set(CMAKE_C_FLAGS "-std=c99")
 
 # Each Path
 include_directories(${PROJECT_SOURCE_DIR}/../include)
+include_directories(${PROJECT_BINARY_DIR})
 configure_file (
   "${PROJECT_SOURCE_DIR}/../include/ASDBConfig.h.in"
   "${PROJECT_BINARY_DIR}/ASDBConfig.h"
@@ -24,3 +25,11 @@ link_libraries(${GLIB2_LIBRARIES})
 add_library (asdb SHARED asdb.c array.c)
 install (TARGETS asdb DESTINATION lib)
 install (FILES "${PROJECT_SOURCE_DIR}/../include/asdb.h" DESTINATION include)
+
+# TestLibrary
+function(createTestLibrary)
+  # Add definition for execution of test
+  add_definitions(-D__TEST__)
+  add_library(ASDBTest asdb.c array.c)
+endfunction()
+createTestLibrary()

@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include <CppUTest/CommandLineTestRunner.h>
 
-IMPORT_TEST_GROUP(ASDBTestGroup);
+IMPORT_TEST_GROUP(IndexTestGroup);
+IMPORT_TEST_GROUP(DummyTestGroup);
 
 int main(int argc, char *argv[])
 {

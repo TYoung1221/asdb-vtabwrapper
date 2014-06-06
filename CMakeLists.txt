@@ -16,7 +16,8 @@ option(EXECTEST "Execute all tests" OFF)
 add_subdirectory(src)
 # test
 if(EXECTEST)
-add_subdirectory(test)
+  add_subdirectory(mock)
+  add_subdirectory(test)
 endif()
 
 # Installer Package

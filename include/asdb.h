@@ -60,10 +60,10 @@ extern asdb_rc asdb_close( asdb_cursor * );
 extern asdb_row *asdb_next( asdb_cursor * );
 extern asdb_cell *asdb_get_cell( const asdb_row *, int );
 extern asdb_value asdb_get_value( const asdb_cell * );
-extern asdb_vtab *asdb_create_vtab( int, const char *const* );
+extern asdb_vtab *asdb_create_vtab( int, const char*const*);
 extern asdb_rc asdb_destroy_vtab( asdb_vtab * );
 /* User Defined Variables */
-extern const char const *asdb_get_module_name();
+extern const char* const asdb_get_module_name();
 
 /* Utilities */
 asdb_rc asdb_set_value_int64( asdb_value *col, sqlite3_int64 i );

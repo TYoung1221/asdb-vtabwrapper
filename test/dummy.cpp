@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <CppUTest/CommandLineTestRunner.h>
 
-TEST_GROUP(ASDBTestGroup)
+TEST_GROUP(DummyTestGroup)
 {
     void setup()
     {
@@ -17,6 +17,6 @@ TEST_GROUP(ASDBTestGroup)
     }
 };
 
-TEST(ASDBTestGroup, TestDummy) {
-    CHECK_EQUAL(true, true);
+TEST(DummyTestGroup, TestDummy) {
+    CHECK(true);
 }
