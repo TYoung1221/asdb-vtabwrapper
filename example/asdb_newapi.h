@@ -1,10 +1,12 @@
 #pragma once
 
 #include <glib-2.0/glib.h>
+#include <pthread.h>
 #include "asdb.h"
 
 typedef struct _asdb_request {
     GQueue *rowq;
+    pthread_mutex_t mtx;
 } asdb_request;
 
 extern asdb_row *asdb_create_row(asdb_request *req);

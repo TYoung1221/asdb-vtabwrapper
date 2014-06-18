@@ -26,7 +26,6 @@ typedef struct _nw_cursor {
     sqlite3_int64 rowid;
     /* defined by user */
     pthread_t th;
-    asdb_request *req;
     nw_targ *targ;
 } nw_cursor;
 

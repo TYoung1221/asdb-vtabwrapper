@@ -1,4 +1,4 @@
-//! gcc -std=gnu99 -Wl,-rpath=. -shared -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  -o adapter.so new-engtext.c newerwrapper.c  -lasdb -lglib-2.0
+//! gcc -g -O0 -std=gnu99 -Wl,-rpath=. -shared -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  -o adapter.so new-engtext.c newerwrapper.c  -lasdb -lglib-2.0
 
 #include <stdio.h>
 #include <stdint.h>
@@ -47,7 +47,10 @@ void asdb_yield_column(asdb_row *row, void *data, asdb_type type, int icol)
 
 void asdb_yield_row(asdb_request *req, asdb_row *row)
 {
+    /* fprintf(stderr, "push!\n"); */
+    pthread_mutex_lock(&req->mtx);
     g_queue_push_head(req->rowq, row);
+    pthread_mutex_unlock(&req->mtx);
 }
 
 
@@ -56,6 +59,7 @@ asdb_request *asdb_request_new()
     asdb_request *req = malloc(sizeof(asdb_request));
     if (req == NULL) return NULL;
     req->rowq = g_queue_new();
+    pthread_mutex_init(&req->mtx, NULL);
     if (req->rowq == NULL) {
         free(req);
         return NULL;
@@ -103,7 +107,7 @@ asdb_rc asdb_close(asdb_cursor *pVtabcursor)
 {
     nw_cursor *cur = (nw_cursor *)pVtabcursor;
     pthread_join(cur->th, NULL);
-    asdb_request_destroy(cur->req);
+    asdb_request_destroy(cur->targ->req);
     free(cur->targ);
     free(cur);
     return ASDB_OK;
@@ -112,11 +116,19 @@ asdb_rc asdb_close(asdb_cursor *pVtabcursor)
 asdb_row *asdb_next(asdb_cursor *pVabcursor)
 {
     nw_cursor *cur = (nw_cursor *)pVabcursor;
-    asdb_request *req = cur->req;
+    asdb_request *req = cur->targ->req;
     nw_row *row;
-    while((row = g_queue_pop_tail(req->rowq)) == NULL); /* spin wait */
+    if (req->rowq == NULL) {
+        fprintf(stderr, "NULL!\n");
+        return NULL;
+    }
+    volatile bool ret;
+    while((ret = g_queue_is_empty(req->rowq))); /* spin wait */
+    pthread_mutex_lock(&req->mtx);
+    row = g_queue_pop_tail(req->rowq);
+    pthread_mutex_unlock(&req->mtx);
     if (row->eof) {
-        g_ptr_array_free(row->array, true);
+        g_ptr_array_free(row->array, false);
         free(row);
         return NULL;
     }
@@ -162,6 +174,7 @@ asdb_vtab *asdb_create_vtab(int argc, const char *const* argv)
             free(v);
             return NULL;
         }
+        v->argv[i] = arg;
         strcpy(v->argv[i], argv[i]);
     }
     return (asdb_vtab *)v;
@@ -191,4 +204,5 @@ static void *loop_handler(void *targ)
     if (row == NULL) return NULL;
     row->array = NULL;
     row->eof = true;
+    g_queue_push_head(arg->req->rowq, row);
 }

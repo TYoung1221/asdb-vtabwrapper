@@ -806,8 +806,6 @@ static void del_asdb_cursor(sqlite3_asdb_cursor * c)
         /* error */
         if ( ASDB_DBG >= 1 ) fprintf( stderr, "DEL_ASDB_CURSOR: FAILURE\n" );
     }
-    /* array_destroy( &c->ira ); */
-    sqlite3_free( c->cursor );
     sqlite3_free( c );
 }
 static asdb_rc asdb_cursor_prepare_index( sqlite3_asdb_cursor *c )
@@ -1002,6 +1000,7 @@ static int asdbCreateOrConnect(
         if ( schema->cname[i] == NULL ) break;
         column = columncat( column, schema->cname[i] );
     }
+    fprintf(stderr, "%s\n", column);
     /* set ncol */
     vtab->vtab->ncol = i;
     /* create query */
@@ -1010,7 +1009,8 @@ static int asdbCreateOrConnect(
         if ( ASDB_DBG >= 2 ) fprintf(stderr, "->SQLITE_NOMEM\n");
         return SQLITE_NOMEM;
     }
-    if ( ASDB_DBG >= 2 ) puts( query );
+    /* if ( ASDB_DBG >= 2 ) puts( query ); */
+    if ( ASDB_DBG >= 2 ) fprintf( stderr, "%s\n", query );
     /* execute query */
     int rc = sqlite3_declare_vtab(db, query);
     if (rc == SQLITE_OK) *ppVtab = (sqlite3_vtab*)vtab;

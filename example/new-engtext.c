@@ -29,16 +29,20 @@ bool asdb_loop(asdb_request *req, int argc, char *argv[])
     if (line == NULL) return false;
     char *delim = " \t\n\r";
     /* main loop */
-    while (fgets(line, ENG_LINEBUF_SIZE, fp) == NULL) {
+    while (fgets(line, ENG_LINEBUF_SIZE, fp) != NULL) {
+        /* fprintf(stderr, "%s\n", line); */
         /* split a line into words */
         char *cur = strtok(line, delim);
         while (cur != NULL) {
             asdb_row *row = asdb_create_row(req);
-            asdb_yield_column(row, cur, ASDB_TYPE_TEXT, 0);
+            char *word = malloc(sizeof(char)*(strlen(cur)+1));
+            strcpy(word, cur);
+            asdb_yield_column(row, word, ASDB_TYPE_TEXT, 0);
             asdb_yield_row(req, row);
             cur = strtok(NULL, delim);
         }
     }
+    fprintf(stderr, "closed..\n");
     fclose(fp);
     free(line);
     return true;
