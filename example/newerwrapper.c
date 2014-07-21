@@ -11,17 +11,21 @@
 #include "asdb.h"
 #include "newerwrapper.h"
 
-const char const *asdb_module_name = "adapter";
+#define UNUSED __attribute__((unused))
+
+const char * const asdb_module_name = "adapter";
 
 extern asdb_schema schema;
 
 static void *loop_handler(void *targ);
 
-asdb_row *asdb_create_row(asdb_request *req)
+asdb_row *asdb_create_row(UNUSED asdb_request *req)
 {
     nw_row *row = malloc(sizeof(nw_row));
     if (row == NULL) return NULL;
-    row->array = g_ptr_array_new();
+    guint columnsize = sizeof(schema.cname)/sizeof(char*);
+    //fprintf(stderr, "columns: %d\n", columnsize);
+    row->array = g_ptr_array_sized_new(columnsize);
     row->eof = false;
     return (asdb_row *)row;
 }
@@ -42,7 +46,8 @@ void asdb_yield_column(asdb_row *row, void *data, asdb_type type, int icol)
         fprintf(stderr, "null column\n");
         return;
     }
-    g_ptr_array_insert(r->array, icol, data);
+    //g_ptr_array_insert(r->array, icol, data);
+    g_ptr_array_index(r->array, icol) = data;
 }
 
 void asdb_yield_row(asdb_request *req, asdb_row *row)
@@ -190,7 +195,7 @@ asdb_rc asdb_destroy_vtab(asdb_vtab *pVtab)
     return ASDB_OK;
 }
 
-const char* const asdb_get_module_name(void)
+const char* asdb_get_module_name(void)
 {
     return asdb_module_name;
 }
@@ -205,4 +210,5 @@ static void *loop_handler(void *targ)
     row->array = NULL;
     row->eof = true;
     g_queue_push_head(arg->req->rowq, row);
+    return NULL;
 }
