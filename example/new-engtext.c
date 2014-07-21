@@ -16,21 +16,18 @@ asdb_schema schema =
     .tname = NULL,
     .cname = {"word"}
 };
-
 bool asdb_loop(asdb_request *req, int argc, char *argv[])
 {
     /* open file */
     char *filename = (argc > 3) ? argv[3] : "a.txt";
     FILE *fp = fopen(filename, "r");
     if (fp == NULL) return false;
-    fprintf(stderr, "open: %s\n", filename);
     /* allocate buffer */
     char *line = (char *)malloc(sizeof(char) * ENG_LINEBUF_SIZE);
     if (line == NULL) return false;
     char *delim = " \t\n\r";
     /* main loop */
     while (fgets(line, ENG_LINEBUF_SIZE, fp) != NULL) {
-        /* fprintf(stderr, "%s\n", line); */
         /* split a line into words */
         char *cur = strtok(line, delim);
         while (cur != NULL) {
@@ -42,7 +39,6 @@ bool asdb_loop(asdb_request *req, int argc, char *argv[])
             cur = strtok(NULL, delim);
         }
     }
-    fprintf(stderr, "closed..\n");
     fclose(fp);
     free(line);
     return true;
